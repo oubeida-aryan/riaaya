@@ -2,9 +2,6 @@
     command = "npm run build"
     publish = "www"
 
-[context.production]
-    ignore = ["secure_admin", "admin.html", "admin.js", "*.sql"]
-
 [headers]
     for = "/*"
     [headers.values]
