@@ -1,0 +1,28 @@
+{
+  "name": "riaaya",
+  "version": "1.0.0",
+  "description": "",
+  "main": "admin.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "mkdir -p www && cp index.html style.css app.js manifest.json sw.js www/ && (cp -r icons www/ || true) && (cp -r assets www/ || true)"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@capacitor/android": "^8.1.0",
+    "@capacitor/app": "^8.0.0",
+    "@capacitor/cli": "^8.1.0",
+    "@capacitor/core": "^8.1.0",
+    "@capacitor/device": "^8.0.0",
+    "@capacitor/geolocation": "^8.1.0",
+    "@capacitor/ios": "^8.1.0",
+    "@capacitor/preferences": "^8.0.0",
+    "@capacitor/push-notifications": "^8.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5"
+  }
+}

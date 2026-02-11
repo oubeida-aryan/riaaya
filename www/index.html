@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riaaya | رعاية</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <!-- Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <meta name="theme-color" content="#00b894">
+    <link rel="stylesheet" href="style.css?v=2.0">
+</head>
+
+<body>
+
+    <!-- Welcome / Onboarding Screen -->
+    <div id="splash-screen" class="screen active">
+        <div class="welcome-container">
+            <div class="logo-card">
+                <img src="icons/logo.png" alt="Riaaya Logo" class="welcome-logo">
+            </div>
+
+            <div class="welcome-content">
+                <h1 class="welcome-title">مرحباً بك في رعاية</h1>
+                <p class="welcome-subtitle">
+                    شريكك الأمثل لخدمات الرعاية الصحية المتكاملة
+                    <br>للمسنين، بكل حب واهتمام
+                </p>
+
+                <div class="phone-pill">
+                    <i class="fa-solid fa-phone"></i>
+                    <span>44445658</span>
+                </div>
+
+                <div class="disclaimer-box">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <p>تطبيقنا لا يقدم علاجاً أو تشخيصاً طبياً، بل يقدم خدمات تمريضية فقط</p>
+                </div>
+            </div>
+
+            <button onclick="showScreen('login-screen')" class="btn-welcome">
+                ابدأ رحلتك
+            </button>
+        </div>
+    </div>
+
+    <!-- Login / Onboarding Screen -->
+    <div id="login-screen" class="screen">
+        <div class="header">
+            <div class="header-icon">
+                <i class="fa-solid fa-user-plus"></i>
+            </div>
+            <h2>مرحباً بك</h2>
+            <p>Bienvenue au service Riaaya</p>
+        </div>
+        <div class="form-group">
+            <div class="input-with-icon">
+                <i class="fa-solid fa-user"></i>
+                <input type="text" id="user-name" placeholder="الاسم الكامل / Nom Complet">
+            </div>
+
+            <div class="input-with-icon">
+                <i class="fa-solid fa-phone"></i>
+                <input type="tel" id="user-phone" placeholder="رقم الهاتف / Téléphone">
+            </div>
+
+            <div class="input-with-icon">
+                <i class="fa-solid fa-map-location-dot"></i>
+                <select id="user-region" class="region-select">
+                    <option value="">اختر المنطقة / Choisissez la région</option>
+                </select>
+            </div>
+
+            <div class="location-box">
+                <button onclick="getLocation()" class="btn-outline">
+                    <i class="fa-solid fa-location-crosshairs"></i> تحديد موقعي (GPS)
+                </button>
+                <p id="location-status" class="small-text">أو اختر يدوياً / ou manuel</p>
+                <div class="input-with-icon">
+                    <i class="fa-solid fa-house-medical"></i>
+                    <input type="text" id="manual-location" placeholder="العنوان يدوياً / Adresse manuelle">
+                </div>
+            </div>
+
+            <button onclick="goToHome()" class="btn-primary">دخول / Entrer</button>
+        </div>
+    </div>
+
+    <!-- Main Home Screen (Tabs) -->
+    <div id="home-screen" class="screen">
+        <header class="app-header">
+            <div class="header-content">
+                <div id="admin-trigger" class="brand-logo">
+                    <i class="fa-solid fa-heart-pulse"></i>
+                    <span>رعاية</span>
+                </div>
+                <div class="user-profile-pill" id="display-name">
+                    <i class="fa-regular fa-user"></i> Guest
+                </div>
+            </div>
+
+            <div class="tabs-container">
+                <button class="tab-btn active" onclick="switchTab('nursing')">
+                    <span>تمريض</span>
+                    <small>Soins</small>
+                </button>
+                <button class="tab-btn" onclick="switchTab('material')">
+                    <span>معدات</span>
+                    <small>Matériel</small>
+                </button>
+                <button class="tab-btn" onclick="switchTab('nurses')">
+                    <span>ممرضين</span>
+                    <small>Infirmiers</small>
+                </button>
+            </div>
+        </header>
+
+
+
+        <div id="content-area" class="content-list">
+            <!-- Items injected via JS -->
+        </div>
+
+        <!-- Floating Button for Nurses -->
+        <button id="btn-add-nurse" class="btn-float" onclick="showScreen('nurse-register-screen')">
+            <i class="fa-solid fa-user-nurse"></i>
+        </button>
+    </div>
+
+    <!-- Facturation / Confirmation Screen -->
+    <div id="checkout-screen" class="screen">
+        <div class="header">
+            <button onclick="goBack()" class="back-btn">
+                <i class="fa-solid fa-arrow-right"></i>
+                <span>رجوع / Retour</span>
+            </button>
+            <h3>الفاتورة / Facturation</h3>
+        </div>
+
+        <div class="invoice-card">
+            <div class="receipt-header">
+                <i class="fa-solid fa-file-invoice-dollar"></i>
+                <span>فاتورة طبية / Facture Médicale</span>
+            </div>
+
+            <h2 id="invoice-service">Service Name</h2>
+            <h1 id="invoice-price">0 MRU</h1>
+
+            <div class="receipt-divider"></div>
+
+            <p class="payment-title">طريقة الدفع / Mode de Paiement</p>
+            <div class="radio-group">
+                <label class="radio-box">
+                    <input type="radio" name="payment" value="Direct" checked onchange="toggleBankDetails(false)">
+                    <div class="radio-info">
+                        <i class="fa-solid fa-hand-holding-dollar"></i>
+                        <span>دفع نقدا / Cash</span>
+                    </div>
+                </label>
+                <label class="radio-box">
+                    <input type="radio" name="payment" value="Bank" onchange="toggleBankDetails(true)">
+                    <div class="radio-info">
+                        <i class="fa-solid fa-building-columns"></i>
+                        <span>تحويل بنكي / Banque</span>
+                    </div>
+                </label>
+            </div>
+
+            <!-- Banking Details (Initially Hidden) -->
+            <div id="bank-details" class="bank-details-container">
+                <div class="bank-item">
+                    <div class="bank-name">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Bankily_Logo.png/240px-Bankily_Logo.png"
+                            alt="Bankily" style="width:24px; height:24px; border-radius:4px;"
+                            onerror="this.src='https://cdn-icons-png.flaticon.com/512/2830/2830284.png'">
+                        <span>Bankily: <strong>44445658</strong></span>
+                    </div>
+                    <button class="btn-copy" onclick="copyValue('44445658', this)">
+                        <i class="fa-solid fa-copy"></i>
+                    </button>
+                </div>
+                <div class="bank-item">
+                    <div class="bank-name">
+                        <i class="fa-solid fa-shield-halved" style="color:#0984e3"></i>
+                        <span>Masrivi: <strong>44445658</strong></span>
+                    </div>
+                    <button class="btn-copy" onclick="copyValue('44445658', this)">
+                        <i class="fa-solid fa-copy"></i>
+                    </button>
+                </div>
+
+                <div class="screenshot-upload">
+                    <label for="payment-screenshot" class="upload-label" id="screenshot-label">
+                        <i class="fa-solid fa-camera-retro"></i>
+                        <span>إرفاق وصل الدفع / Attacher le reçu</span>
+                    </label>
+                    <input type="file" id="payment-screenshot" accept="image/*" class="file-input"
+                        onchange="handleFileSelect(this)">
+                    <div id="file-preview" class="file-preview"></div>
+                </div>
+            </div>
+        </div>
+
+        <button onclick="sendOrderToWhatsapp()" class="btn-whatsapp" id="btn-confirm-order">
+            <span id="btn-text"><i class="fa-brands fa-whatsapp"></i> تأكيد عبر واتساب</span>
+            <span id="btn-loader" style="display:none"><i class="fa-solid fa-spinner fa-spin"></i> جاري
+                الإرسال...</span>
+        </button>
+    </div>
+
+    <!-- Nurse Registration Screen -->
+    <div id="nurse-register-screen" class="screen">
+        <div class="header">
+            <button onclick="showScreen('home-screen')" class="back-btn">
+                <i class="fa-solid fa-arrow-right"></i>
+                <span>رجوع / Retour</span>
+            </button>
+            <h3>تسجيل ممرض / Inscription</h3>
+        </div>
+
+        <div class="registration-form">
+            <div class="header-icon" style="background: rgba(5, 150, 105, 0.1); color: #059669;">
+                <i class="fa-solid fa-user-doctor"></i>
+            </div>
+
+            <p class="section-title">معلوماتك المهنية / Infos Professionnelles</p>
+
+            <div class="input-with-icon">
+                <i class="fa-solid fa-user"></i>
+                <input type="text" id="nurse-name-reg" placeholder="الاسم الكامل / Nom Complet">
+            </div>
+
+            <div class="input-with-icon">
+                <i class="fa-solid fa-phone"></i>
+                <input type="tel" id="nurse-phone-reg" placeholder="رقم الهاتف (واتساب) / WhatsApp">
+            </div>
+
+            <div class="input-with-icon">
+                <i class="fa-solid fa-stethoscope"></i>
+                <select id="nurse-specialty-reg">
+                    <option value="">اختر التخصص / Spécialité</option>
+                    <option value="تمريض عام">تمريض عام / infirmier général</option>
+                    <option value="تمريض أطفال">تمريض أطفال / Pédiatrie</option>
+                    <option value="علاج طبيعي">علاج طبيعي / Kinésithérapie</option>
+                    <option value="رعاية كبار السن">رعاية كبار السن / Soins gériatriques</option>
+                </select>
+            </div>
+
+            <div class="input-with-icon">
+                <i class="fa-solid fa-map-location-dot"></i>
+                <select id="nurse-region-reg" class="region-select">
+                    <option value="">اختر المنطقة / Choisissez la région</option>
+                </select>
+            </div>
+
+            <div class="location-box" style="background: #ecfdf5; border-color: #d1fae5;">
+                <button onclick="fixNurseLocation()" id="btn-fix-location" class="btn-outline"
+                    style="border-color: #059669; color: #059669;">
+                    <i class="fa-solid fa-location-dot"></i> تثبيت موقعي المهني (GPS)
+                </button>
+                <p id="nurse-location-status" class="small-text" style="color: #065f46;">تحديد موقعك يساعد المرضى
+                    القريبين منك في الوصول إليك</p>
+            </div>
+
+            <button onclick="submitNurseProfile()" class="btn-primary" style="background: #059669;">
+                تأكيد التسجيل / Confirmer
+            </button>
+        </div>
+    </div>
+
+    <!-- Admin Login Overlay -->
+    <div id="admin-modal" class="modal">
+        <div class="modal-content">
+            <h3>Admin Panel</h3>
+            <input type="password" id="admin-pin" maxlength="4" placeholder="Enter PIN">
+            <button onclick="checkAdminCode()" class="btn-primary">Verify</button>
+            <button onclick="closeAdmin()" class="btn-text">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="admin-dashboard" class="screen">
+        <div class="header">
+            <h3>لوحة التحكم / Admin</h3>
+            <button onclick="logoutAdmin()" class="btn-text">Exit</button>
+        </div>
+        <div class="admin-controls">
+            <input type="text" id="new-service-ar" placeholder="Service Name AR">
+            <input type="text" id="new-service-fr" placeholder="Service Name FR">
+            <input type="number" id="new-price" placeholder="Price">
+            <select id="new-category">
+                <option value="nursing">Nursing</option>
+                <option value="material">Material</option>
+            </select>
+            <button onclick="addServiceToDb()" class="btn-primary">Add Service</button>
+        </div>
+        <div id="admin-status"></div>
+    </div>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js?v=' + Date.now())
+                    .then(registration => {
+                        console.log('SW registered: ', registration);
+                        // Force update check
+                        registration.update();
+                    })
+                    .catch(registrationError => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+    </script>
+    <script src="app.js?v=2.0"></script>
+</body>
+
+</html>
