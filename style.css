@@ -1066,3 +1066,68 @@ select:focus {
         -webkit-overflow-scrolling: touch;
     }
 }
+
+/* Mobile-specific optimizations */
+.mobile-device {
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    touch-action: manipulation;
+}
+
+.mobile-device input,
+.mobile-device select,
+.mobile-device textarea {
+    font-size: 16px !important; /* Prevent zoom on iOS */
+}
+
+.mobile-device .region-select {
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: left 12px center;
+    background-size: 20px;
+    padding-right: 40px;
+}
+
+.mobile-device .btn-primary,
+.mobile-device .btn-outline {
+    min-height: 48px; /* iOS touch target minimum */
+}
+
+.mobile-device .card {
+    cursor: pointer;
+    -webkit-tap-highlight-color: rgba(15, 118, 110, 0.1);
+}
+
+/* Ensure proper viewport handling on mobile */
+@media screen and (max-width: 768px) {
+    .mobile-device .screen {
+        min-height: 100vh;
+        min-height: -webkit-fill-available;
+    }
+    
+    .mobile-device .tabs-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .mobile-device .tab-btn {
+        flex: 1;
+        min-width: 80px;
+    }
+}
+
+/* iOS Safari specific fixes */
+@supports (-webkit-touch-callout: none) {
+    .mobile-device .screen {
+        height: -webkit-fill-available;
+    }
+    
+    .mobile-device input:focus,
+    .mobile-device select:focus,
+    .mobile-device textarea:focus {
+        -webkit-appearance: none;
+        appearance: none;
+    }
+}

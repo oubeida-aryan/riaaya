@@ -18,8 +18,14 @@ function initializeSupabase() {
 
         // Enable tab buttons after successful initialization
         enableTabButtons();
+        
+        // Populate regions immediately after initialization
+        populateRegions();
     } else {
         console.error('Supabase library not loaded');
+        // Fallback: populate regions even without Supabase
+        populateRegions();
+        
         // Retry initialization after a delay
         setTimeout(() => {
             if (!supabase && window.supabase) {
@@ -117,38 +123,119 @@ let currentScreen = 'splash-screen';
 
 // 1. Splash Screen Logic
 window.onload = async () => {
-    // Initialize Device ID and Load Data
-    await initDeviceId();
-    const savedData = await Storage.get('userData');
-    if (savedData) {
-        userData = { ...userData, ...savedData };
-    }
+    console.log('App loading started...');
+    
+    // Show loading state
+    const loadingEl = document.createElement('div');
+    loadingEl.id = 'app-loading';
+    loadingEl.innerHTML = '<div style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;font-family:Cairo,sans-serif;"><i class="fa-solid fa-spinner fa-spin" style="font-size:2rem;color:#00b894;"></i><p style="margin-top:1rem;color:#666;">جاري التحميل... / Chargement...</p></div>';
+    document.body.appendChild(loadingEl);
+    
+    try {
+        // Initialize Device ID and Load Data
+        await initDeviceId();
+        const savedData = await Storage.get('userData');
+        if (savedData) {
+            userData = { ...userData, ...savedData };
+        }
 
-    // Check if Supabase is already loaded
-    if (window.supabase) {
-        initializeSupabase();
-        setTimeout(() => {
-            populateRegions();
-            checkAutoForward();
-        }, 500);
-    } else {
-        loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.js', async function () {
+        // Mobile-specific optimizations
+        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+            console.log('Mobile device detected, applying optimizations...');
+            document.body.classList.add('mobile-device');
+            
+            // Prevent zoom on input focus (iOS)
+            const viewport = document.querySelector('meta[name="viewport"]');
+            if (viewport) {
+                viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+            }
+        }
+
+        // Check if Supabase is already loaded
+        if (window.supabase) {
+            console.log('Supabase already available');
+            initializeSupabase();
             setTimeout(() => {
-                initializeSupabase();
-                populateRegions();
                 checkAutoForward();
+                removeLoadingScreen();
             }, 500);
-        });
+        } else {
+            console.log('Loading Supabase from CDN...');
+            // Fallback: populate regions immediately even without Supabase
+            populateRegions();
+            
+            loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.js', async function () {
+                console.log('Supabase loaded successfully');
+                setTimeout(() => {
+                    initializeSupabase();
+                    checkAutoForward();
+                    removeLoadingScreen();
+                }, 500);
+            }, function () {
+                console.error('Failed to load Supabase script, retrying...');
+                setTimeout(() => {
+                    loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.js', async function () {
+                        console.log('Supabase loaded on retry');
+                        setTimeout(() => {
+                            initializeSupabase();
+                            checkAutoForward();
+                            removeLoadingScreen();
+                        }, 500);
+                    }, function () {
+                        console.error('Failed to load Supabase script again, giving up...');
+                        // Continue without Supabase
+                        setTimeout(() => {
+                            checkAutoForward();
+                            removeLoadingScreen();
+                        }, 1000);
+                    });
+                }, 2000);
+            });
+        }
+    } catch (error) {
+        console.error('Error during app initialization:', error);
+        removeLoadingScreen();
+        showErrorMessage();
     }
-
-
 };
 
-// Helper function to load scripts dynamically
-function loadScript(src, callback) {
+function removeLoadingScreen() {
+    const loadingEl = document.getElementById('app-loading');
+    if (loadingEl) {
+        loadingEl.remove();
+    }
+}
+
+function showErrorMessage() {
+    const errorEl = document.createElement('div');
+    errorEl.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;font-family:Cairo,sans-serif;padding:2rem;background:#fff;border-radius:1rem;box-shadow:0 4px 6px rgba(0,0,0,0.1);max-width:90%;';
+    errorEl.innerHTML = `
+        <div style="color:#e11d48;margin-bottom:1rem;">
+            <i class="fa-solid fa-exclamation-triangle" style="font-size:2rem;"></i>
+        </div>
+        <h3 style="margin-bottom:0.5rem;">خطأ في التحميل / Erreur de chargement</h3>
+        <p style="color:#666;margin-bottom:1rem;">يرجى التحقق من اتصالك بالإنترنت والمحاولة مرة أخرى</p>
+        <button onclick="window.location.reload()" style="background:#00b894;color:#fff;border:none;padding:0.75rem 1.5rem;border-radius:0.5rem;cursor:pointer;font-family:Cairo,sans-serif;">
+            إعادة المحاولة / Réessayer
+        </button>
+    `;
+    document.body.appendChild(errorEl);
+}
+
+// Helper function to load scripts dynamically with error handling
+function loadScript(src, callback, errorCallback) {
     const script = document.createElement('script');
     script.src = src;
     script.onload = callback;
+    script.onerror = () => {
+        console.error(`Failed to load script: ${src}`);
+        if (errorCallback) errorCallback();
+    };
+    script.timeout = 10000; // 10 second timeout
+    script.ontimeout = () => {
+        console.error(`Script loading timed out: ${src}`);
+        if (errorCallback) errorCallback();
+    };
     document.head.appendChild(script);
 }
 
@@ -157,6 +244,12 @@ function populateRegions() {
     console.log('populateRegions called, mauritanianRegions:', mauritanianRegions);
     const regionSelects = document.querySelectorAll('.region-select');
     console.log('Found region selects:', regionSelects.length);
+
+    if (regionSelects.length === 0) {
+        console.warn('No region selects found, retrying in 100ms...');
+        setTimeout(populateRegions, 100);
+        return;
+    }
 
     regionSelects.forEach((select, index) => {
         console.log(`Processing select ${index}:`, select);
