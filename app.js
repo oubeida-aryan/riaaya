@@ -154,20 +154,29 @@ function loadScript(src, callback) {
 
 // Function to populate regions dropdown
 function populateRegions() {
+    console.log('populateRegions called, mauritanianRegions:', mauritanianRegions);
     const regionSelects = document.querySelectorAll('.region-select');
-    regionSelects.forEach(select => {
+    console.log('Found region selects:', regionSelects.length);
+
+    regionSelects.forEach((select, index) => {
+        console.log(`Processing select ${index}:`, select);
         if (select) {
             // Keep the first option (placeholder)
             const placeholder = select.options[0];
             select.innerHTML = '';
-            select.appendChild(placeholder);
+            if (placeholder) {
+                select.appendChild(placeholder);
+            }
 
-            mauritanianRegions.forEach(region => {
+            mauritanianRegions.forEach((region, regionIndex) => {
                 const option = document.createElement('option');
                 option.value = region.name_ar;
                 option.textContent = `${region.name_ar} / ${region.name_fr}`;
                 select.appendChild(option);
+                console.log(`Added region ${regionIndex}:`, region.name_ar);
             });
+
+            console.log(`Select ${index} now has ${select.options.length} options`);
         }
     });
 }
@@ -194,6 +203,11 @@ function checkAutoForward() {
     } else {
         showScreen('splash-screen');
     }
+    
+    // Ensure regions are populated regardless of screen
+    setTimeout(() => {
+        populateRegions();
+    }, 100);
 }
 
 function goBack() {
