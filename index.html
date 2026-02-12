@@ -14,7 +14,7 @@
     <!-- Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <meta name="theme-color" content="#00b894">
-    <link rel="stylesheet" href="style.css?v=2.0">
+    <link rel="stylesheet" href="style.css?v=3.0">
 </head>
 
 <body>
@@ -306,7 +306,8 @@
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js?v=' + Date.now())
+                const swVersion = '3.0';
+                navigator.serviceWorker.register(`/sw.js?v=${swVersion}`)
                     .then(registration => {
                         console.log('SW registered: ', registration);
                         registration.update();
@@ -317,7 +318,7 @@
             });
         }
     </script>
-    <script src="app.js?v=2.0"></script>
+    <script src="app.js?v=3.0"></script>
 </body>
 
 </html>

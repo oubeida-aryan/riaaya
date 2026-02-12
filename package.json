@@ -1,15 +1,19 @@
 {
   "name": "riaaya",
-  "version": "1.0.0",
-  "description": "",
-  "main": "admin.js",
+  "version": "3.0.0",
+  "description": "Riaaya Healthcare Services App",
+  "main": "index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "mkdir -p www && cp index.html style.css app.js manifest.json sw.js www/ && (cp -r icons www/ || true) && (cp -r assets www/ || true)"
+    "start": "npx serve . -p 8080",
+    "build": "node build.js && mkdir -p www && cp index.html style.css app.js manifest.json sw.js build.js www/ && (cp -r icons www/ || true) && (cp -r assets www/ || true)",
+    "android": "npm run build && npx cap sync android && npx cap open android",
+    "ios": "npm run build && npx cap sync ios && npx cap open ios",
+    "sync": "npx cap sync"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["healthcare", "nursing", "mauritania"],
+  "author": "Riaaya Team",
+  "license": "MIT",
   "type": "commonjs",
   "dependencies": {
     "@capacitor/android": "^8.1.0",

@@ -45,6 +45,19 @@
 * {
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Allow text selection for inputs and specific elements */
+input, textarea, select, [contenteditable] {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
 }
 
 body {
@@ -59,6 +72,15 @@ body {
     min-height: 100vh;
     direction: rtl;
     /* Ensure RTL default */
+    /* iOS Safari fixes */
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    touch-action: manipulation;
+    overflow-x: hidden;
+    /* Prevent bounce scroll on iOS */
+    position: fixed;
+    width: 100%;
+    height: 100%;
 }
 
 h1,
@@ -76,12 +98,21 @@ h6 {
 .screen {
     width: 100%;
     height: 100dvh;
+    /* Fallback for older browsers */
+    height: 100vh;
     background-color: var(--bg-main);
     display: none;
     flex-direction: column;
     overflow-x: hidden;
     overflow-y: auto;
     position: relative;
+    /* iOS Safari smooth scrolling */
+    -webkit-overflow-scrolling: touch;
+    /* Prevent pull-to-refresh */
+    overscroll-behavior: contain;
+    /* Hardware acceleration */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
 }
 
 .screen.active {
@@ -108,6 +139,8 @@ h6 {
         background: #0f172a;
         /* Dark Slate 900 for premium contrast */
         align-items: center;
+        position: relative;
+        /* Allow body positioning on desktop */
     }
 
     .screen {
@@ -121,6 +154,8 @@ h6 {
             0 20px 25px -5px rgba(0, 0, 0, 0.1);
         overflow: hidden;
         margin: auto;
+        position: relative;
+        /* Reset position for desktop */
     }
 }
 
@@ -142,6 +177,12 @@ h6 {
     justify-content: center;
     align-items: center;
     gap: 8px;
+    /* Touch-friendly improvements */
+    -webkit-tap-highlight-color: rgba(15, 118, 110, 0.1);
+    touch-action: manipulation;
+    min-height: 44px;
+    /* iOS minimum touch target */
+    min-width: 44px;
 }
 
 .btn-primary:hover {
@@ -282,6 +323,12 @@ select:focus {
     transition: var(--transition-fast);
     position: relative;
     z-index: 1;
+    /* Touch-friendly improvements */
+    -webkit-tap-highlight-color: rgba(15, 118, 110, 0.1);
+    touch-action: manipulation;
+    min-height: 44px;
+    /* iOS minimum touch target */
+    min-width: 44px;
 }
 
 .tab-btn span {
@@ -334,6 +381,12 @@ select:focus {
     position: relative;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     /* Slightly stronger shadow */
+    /* Touch-friendly improvements */
+    -webkit-tap-highlight-color: rgba(15, 118, 110, 0.1);
+    touch-action: manipulation;
+    /* Prevent layout shift on touch */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
 }
 
 .card:hover {
@@ -344,6 +397,8 @@ select:focus {
 
 .card:active {
     transform: scale(0.98) translateY(-2px);
+    /* Prevent layout shift on iOS */
+    -webkit-transform: scale(0.98) translateY(-2px);
 }
 
 .card-image {
@@ -437,8 +492,6 @@ select:focus {
     margin: 0;
     line-height: 1.2;
 }
-
-
 
 .nurse-specialty {
     color: #059669;
@@ -647,6 +700,12 @@ select:focus {
     cursor: pointer;
     z-index: 100;
     transition: var(--transition-fast);
+    /* Touch-friendly improvements */
+    -webkit-tap-highlight-color: rgba(5, 150, 105, 0.2);
+    touch-action: manipulation;
+    /* iOS Safari fix for fixed positioning */
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
 }
 
 .btn-float:active {
@@ -962,4 +1021,48 @@ select:focus {
 * {
     scrollbar-width: none;
     -ms-overflow-style: none;
+}
+
+/* iOS Safari specific fixes */
+@supports (-webkit-touch-callout: none) {
+    /* Specific to iOS Safari */
+    .screen {
+        /* Prevent momentum scrolling issues */
+        -webkit-overflow-scrolling: touch;
+        /* Fix viewport height issues */
+        height: -webkit-fill-available;
+    }
+    
+    /* Fix input zoom on iOS */
+    input[type="text"],
+    input[type="tel"],
+    input[type="password"],
+    input[type="email"],
+    input[type="number"],
+    select,
+    textarea {
+        font-size: 16px !important;
+    }
+    
+    /* Prevent bounce scroll */
+    body {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+    
+    .screen {
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* Android specific fixes */
+@media screen and (-webkit-min-device-pixel-ratio: 0) and (min-resolution: .001dpcm) {
+    .screen {
+        /* Chrome/Android specific */
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
 }
