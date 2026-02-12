@@ -277,16 +277,24 @@ function getLocation() {
 }
 
 // 5. Tab Navigation
-function switchTab(tabName) {
+function switchTab(tabName, event) {
     // Update tab buttons
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.classList.remove('active');
     });
 
-    // Handle click on children elements
-    const clickedBtn = event.target.closest('.tab-btn');
-    if (clickedBtn) {
-        clickedBtn.classList.add('active');
+    // Handle click on children elements if event is provided
+    if (event && event.target) {
+        const clickedBtn = event.target.closest('.tab-btn');
+        if (clickedBtn) {
+            clickedBtn.classList.add('active');
+        }
+    } else {
+        // If no event, find the button by tab name
+        const targetBtn = document.querySelector(`.tab-btn[onclick*="${tabName}"]`);
+        if (targetBtn) {
+            targetBtn.classList.add('active');
+        }
     }
 
     // Check if Supabase is initialized

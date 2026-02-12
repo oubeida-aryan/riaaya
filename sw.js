@@ -1,3 +1,4 @@
+// Version: 3.1.1770909864736
 const CACHE_NAME = 'riaya-v1-killer';
 
 // Install event - skip waiting to activate immediately

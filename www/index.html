@@ -14,7 +14,7 @@
     <!-- Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <meta name="theme-color" content="#00b894">
-    <link rel="stylesheet" href="style.css?v=3.0">
+    <link rel="stylesheet" href="style.css?v=3.1.1770909864736">
 </head>
 
 <body>
@@ -106,15 +106,15 @@
             </div>
 
             <div class="tabs-container">
-                <button class="tab-btn active" onclick="switchTab('nursing')">
+                <button class="tab-btn active" onclick="switchTab('nursing', event)">
                     <span>تمريض</span>
                     <small>Soins</small>
                 </button>
-                <button class="tab-btn" onclick="switchTab('material')">
+                <button class="tab-btn" onclick="switchTab('material', event)">
                     <span>معدات</span>
                     <small>Matériel</small>
                 </button>
-                <button class="tab-btn" onclick="switchTab('nurses')">
+                <button class="tab-btn" onclick="switchTab('nurses', event)">
                     <span>ممرضين</span>
                     <small>Infirmiers</small>
                 </button>
@@ -306,7 +306,7 @@
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                const swVersion = '3.0';
+                const swVersion = '3.1.1770909864736';
                 navigator.serviceWorker.register(`/sw.js?v=${swVersion}`)
                     .then(registration => {
                         console.log('SW registered: ', registration);
@@ -318,7 +318,7 @@
             });
         }
     </script>
-    <script src="app.js?v=3.0"></script>
+    <script src="app.js?v=3.1.1770909864736"></script>
 </body>
 
 </html>
